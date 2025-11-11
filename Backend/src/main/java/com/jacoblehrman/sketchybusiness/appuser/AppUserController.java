@@ -38,7 +38,7 @@ public class AppUserController {
             aus.login(lr.getUserNameEmail(),lr.getPassword());
         } catch (IllegalArgumentException e) {
             response.put("error", e.getMessage());
-            response.put("status", "402");
+            response.put("status", "401");
             return response;
         }
         response.put("status", "200");
