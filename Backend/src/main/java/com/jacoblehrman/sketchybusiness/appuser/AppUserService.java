@@ -1,13 +1,16 @@
 package com.jacoblehrman.sketchybusiness.appuser;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import org.slf4j.Logger;
+
 @Service
 public class AppUserService {
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
+    private static final Logger logger = LoggerFactory.getLogger(AppUserService.class);
     @Autowired
     AppUserRepo aur;
 
@@ -19,6 +22,7 @@ public class AppUserService {
     }
     
     public void login(String usernameEmail, String password){
+        logger.info("Attempted login with username/email: "+usernameEmail);
         if (usernameEmail == null ) {
             throw new IllegalArgumentException("Username or email cannot be null");
         }
@@ -36,5 +40,12 @@ public class AppUserService {
         if(!passwordEncoder.matches(password, userLog.passwordHash)){
             throw new IllegalArgumentException("Username and password incorrect");
         }
+    }
+
+    public boolean AppUserExistsWithUsername(String username){
+        return aur.existsByUsername(username);
+    }
+    public boolean AppUserExistsWithEmail(String email){
+        return aur.existsByUsername(email);
     }
 }

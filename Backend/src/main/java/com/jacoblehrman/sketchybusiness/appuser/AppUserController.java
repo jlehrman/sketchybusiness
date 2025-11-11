@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:4200")
 public class AppUserController {
 
     @Autowired
@@ -21,7 +21,7 @@ public class AppUserController {
 
     @PostMapping("/signup")
     public Map<String, String> signUp(@RequestBody SignupRequest sr) {
-        boolean status = aus.register(sr.getUserName(), sr.getPassword(), sr.getEmail());
+        boolean status = aus.register(sr.username, sr.password, sr.email);
         Map<String, String> response = new HashMap<>();
         if (status == true) {
             response.put("status", "200");
@@ -32,17 +32,30 @@ public class AppUserController {
 
     }
     @PostMapping("/login")
-    public Map<String, String> login(@RequestBody LoginRequest lr){
+    public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequest lr){
         Map<String, String> response = new HashMap<>();
         try{
-            aus.login(lr.getUserNameEmail(),lr.getPassword());
+            aus.login(lr.usernameEmail,lr.password);
         } catch (IllegalArgumentException e) {
             response.put("error", e.getMessage());
-            response.put("status", "401");
-            return response;
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
-        response.put("status", "200");
-        return response;
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @GetMapping("/getuserexists")
+    public ResponseEntity<Map<String, Boolean>> getUserExists(@RequestBody GetUserExistsRequest request){
+        Map<String, Boolean> response = new HashMap<>();
+        if(request.username!=null){
+            response.put("exists",aus.AppUserExistsWithUsername(request.username));
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } else if (request.email!=null){
+            response.put("exists",aus.AppUserExistsWithEmail(request.email));
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+     
 
 }

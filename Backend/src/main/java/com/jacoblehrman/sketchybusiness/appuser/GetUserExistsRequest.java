@@ -1,7 +1,6 @@
 package com.jacoblehrman.sketchybusiness.appuser;
 
-public class SignupRequest {
+public class GetUserExistsRequest {
     public String username;
-    public String password;
     public String email;
 }
