@@ -43,7 +43,7 @@ public class AppUserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping("/getuserexists")
+    @PostMapping("/userexists")
     public ResponseEntity<Map<String, Boolean>> getUserExists(@RequestBody GetUserExistsRequest request){
         Map<String, Boolean> response = new HashMap<>();
         if(request.username!=null){

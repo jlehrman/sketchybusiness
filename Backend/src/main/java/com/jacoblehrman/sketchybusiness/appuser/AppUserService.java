@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 public class AppUserService {
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private static final Logger logger = LoggerFactory.getLogger(AppUserService.class);
+    
     @Autowired
     AppUserRepo aur;
 
@@ -43,9 +44,13 @@ public class AppUserService {
     }
 
     public boolean AppUserExistsWithUsername(String username){
-        return aur.existsByUsername(username);
+        boolean exists = aur.existsByUsername(username);
+        logger.info("Check if user exists with username: "+username+" returning " +exists);
+        return exists;
     }
     public boolean AppUserExistsWithEmail(String email){
-        return aur.existsByUsername(email);
+        boolean exists = aur.existsByEmail(email);
+        logger.info("Check if user exists with email: "+email+" returning " +exists);
+        return exists;
     }
 }

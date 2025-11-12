@@ -33,7 +33,6 @@ export class LoginForm {
     private http = inject(HttpClient);
 
     submit() {
-        alert(this.loginForm.value.usernameEmail);
         this.http.post('http://localhost:8080/login', {usernameEmail: this.loginForm.value.usernameEmail, password:this.loginForm.value.password})
             .subscribe({
                 next: (response) => console.log('Success:', response),
@@ -46,10 +45,10 @@ export class LoginForm {
     template: `
     <login-form />
     <nav>
-      <a href="/about">About Us</a>
+      <a routerLink="/about">About Us</a>
     </nav>`,
     styleUrl: './app.css',
-    imports: [LoginForm],
+    imports: [LoginForm, RouterModule],
 
 })
 export class LoginPage {
