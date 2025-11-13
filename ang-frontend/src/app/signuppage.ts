@@ -1,8 +1,8 @@
-import { Component, signal } from '@angular/core';
+import { Component} from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { inject } from '@angular/core';
-import { HttpClient, HttpParams, HttpParameterCodec } from '@angular/common/http';
+import { HttpClient} from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { debounceTime } from 'rxjs/operators';
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
@@ -97,6 +97,15 @@ export const passwordMatchValidator: ValidatorFn = (control: AbstractControl): V
     </div>
     <div>
       <input type="password" formControlName="password" />
+      @if(signupForm.get('password')?.invalid && signupForm.get('password')?.touched){
+        <div>
+          @if(signupForm.get('password')?.errors?.['required']){
+            <small>Password is required.</small>
+          } @else if (signupForm.get('password')?.errors?.['minlength']) {
+            <small>Password must be at least 6 characters.</small>
+          }
+        </div>
+      }
     </div>
     <div>
       <input type="password" formControlName="passwordConfirm" />
@@ -128,8 +137,8 @@ export class SignupForm {
   signupForm = new FormGroup({
     username: new FormControl('', { validators: [Validators.required, Validators.pattern('^[a-zA-Z0-9]*$'), Validators.maxLength(16), Validators.minLength(4)], asyncValidators: [usernameExistsValidator(this.http)], updateOn: 'blur' }),
     email: new FormControl('', { validators: [Validators.required, Validators.email], asyncValidators: [emailExistsValidator(this.http)], updateOn: 'blur' }),
-    password: new FormControl('', Validators.required),
-    passwordConfirm: new FormControl('', [Validators.required, Validators.minLength(6)])
+    password: new FormControl('', { validators: [Validators.required,Validators.minLength(6)], updateOn: 'blur' }),
+    passwordConfirm: new FormControl('', { validators: [Validators.required], updateOn: 'blur' })
   }, { validators: passwordMatchValidator });
 
 
